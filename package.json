@@ -1,0 +1,22 @@
+{
+	"name": "marktail",
+	"version": "1.0.0",
+	"description": "A Babel plugin that marks AST CallExpression nodes which are in tail position."
+	"keywords": [
+		"tailcall",
+		"tail-call",
+		"proper-tail-call",
+		"proper-tailcall"
+	],
+	"homepage": "https://github.com/Floofies/marktail#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Floofies/marktail.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Floofies/marktail/issues"
+	},
+	"main": "src/index.js",
+	"author": "Dani Glore (https://github.com/Floofies)",
+	"license": "MIT"
+}
