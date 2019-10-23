@@ -1,4 +1,3 @@
-
 function Plugin(babel) {
 	const t = babel.types;
 	const tryStack = [];
