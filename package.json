@@ -24,5 +24,8 @@
 	"scripts": {
 		"prepare": "npm run test",
 		"test": "node src/test.js"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.6.4"
 	}
 }
