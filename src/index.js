@@ -1,4 +1,4 @@
-function Plugin(babel) {
+module.exports = function Plugin(babel) {
 	const t = babel.types;
 	const tryStack = [];
 	// Traverses specific expression types and marks a CallExpression in tail position
@@ -25,16 +25,28 @@ function Plugin(babel) {
 			exit: function (path) {
 				// Add Proper Tail Call marker property
 				if ("tailCall" in path.node && path.node.tailCall) {
-					// Check for Proper Tail Call if the call is within a TryStatement
-					if (tryStack.length > 0) {
+					const parentNode = getParentNode(path);
+					if (
+						(
+							parentNode.type === "FunctionDeclaration"
+							|| parentNode.type === "FunctionExpression"
+							|| parentNode.type === "ArrowFunctionExpression"
+						)
+						&& (parentNode.async || parentNode.generator)
+					) {
+						path.node.properTailCall = false;
+					} else if (tryStack.length > 0) {
+						// Check for Proper Tail Call if the call is within a TryStatement
 						const tryData = tryStack[tryStack.length - 1];
-						const parentNode = getParentNode(path);
 						if (parentNode === tryData.functionParent) {
 							if (
-								tryData.blockType === "finalizer"
-								|| tryData.blockType === "catch"
+								tryData.node.finalizer !== null && tryData.blockType === "finalizer"
+								|| tryData.node.finalizer === null && tryData.blockType === "catch"
 							) {
 								path.node.properTailCall = true;
+							} else {
+								path.node.tailCall = false;
+								path.node.properTailCall = false;
 							}
 						} else {
 							path.node.properTailCall = true;
@@ -42,6 +54,9 @@ function Plugin(babel) {
 					} else {
 						path.node.properTailCall = true;
 					}
+				} else {
+					path.node.tailCall = false;
+					path.node.properTailCall = false;
 				}
 				path.skip();
 			}
@@ -84,6 +99,7 @@ function Plugin(babel) {
 			enter: function (path) {
 				tryStack.push({
 					functionParent: getParentNode(path),
+					node: path.node,
 					blockType: null
 				});
 			},
@@ -94,5 +110,4 @@ function Plugin(babel) {
 		}
 	};
 	return { visitor: visitor };
-}
-module.exports = Plugin;
+};
