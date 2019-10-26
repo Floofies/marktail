@@ -1,7 +1,7 @@
 {
 	"name": "marktail",
 	"version": "1.0.0",
-	"description": "A Babel plugin that marks AST CallExpression nodes which are in tail position."
+	"description": "A Babel plugin that marks AST CallExpression nodes which are in tail position.",
 	"keywords": [
 		"tailcall",
 		"tail-call",
